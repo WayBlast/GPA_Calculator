@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             courseNameBox = new TextBox();
             addCourseBtn = new Button();
             coursesLbx = new ListBox();
@@ -60,18 +61,20 @@
             // 
             // addCourseBtn
             // 
+            addCourseBtn.BackColor = SystemColors.Control;
+            addCourseBtn.FlatStyle = FlatStyle.System;
             addCourseBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            addCourseBtn.Location = new Point(298, 54);
+            addCourseBtn.Location = new Point(298, 56);
             addCourseBtn.Name = "addCourseBtn";
-            addCourseBtn.Size = new Size(48, 31);
+            addCourseBtn.Size = new Size(49, 29);
             addCourseBtn.TabIndex = 2;
             addCourseBtn.Text = "Add";
-            addCourseBtn.UseVisualStyleBackColor = true;
+            addCourseBtn.UseVisualStyleBackColor = false;
             addCourseBtn.Click += button1_Click;
             // 
             // coursesLbx
             // 
-            coursesLbx.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            coursesLbx.Font = new Font("Segoe UI", 12F, FontStyle.Italic, GraphicsUnit.Point, 0);
             coursesLbx.FormattingEnabled = true;
             coursesLbx.ItemHeight = 21;
             coursesLbx.Location = new Point(12, 91);
@@ -92,15 +95,14 @@
             // gpaResultLbl
             // 
             gpaResultLbl.AutoSize = true;
-            gpaResultLbl.BorderStyle = BorderStyle.FixedSingle;
-            gpaResultLbl.Font = new Font("Segoe UI", 27.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            gpaResultLbl.Location = new Point(224, 374);
+            gpaResultLbl.BorderStyle = BorderStyle.Fixed3D;
+            gpaResultLbl.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            gpaResultLbl.Location = new Point(201, 374);
             gpaResultLbl.Name = "gpaResultLbl";
-            gpaResultLbl.Size = new Size(122, 52);
+            gpaResultLbl.Size = new Size(100, 34);
             gpaResultLbl.TabIndex = 5;
-            gpaResultLbl.Text = "label1";
+            gpaResultLbl.Text = "GPA = :)";
             gpaResultLbl.TextAlign = ContentAlignment.MiddleCenter;
-            
             // 
             // deleteCourseBtn
             // 
@@ -130,6 +132,7 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.FlatStyle = FlatStyle.Popup;
             label1.Location = new Point(12, 38);
             label1.Name = "label1";
             label1.Size = new Size(79, 15);
@@ -190,6 +193,7 @@
             // 
             // gradeSelector
             // 
+            gradeSelector.DropDownStyle = ComboBoxStyle.DropDownList;
             gradeSelector.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             gradeSelector.FormattingEnabled = true;
             gradeSelector.Items.AddRange(new object[] { "-3", "00", "02", "4", "7", "10", "12" });
@@ -239,8 +243,12 @@
             Controls.Add(addCourseBtn);
             Controls.Add(courseNameBox);
             Controls.Add(menuStrip1);
+            FormBorderStyle = FormBorderStyle.Fixed3D;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
+            MaximizeBox = false;
             Name = "Form1";
-            Text = "Form1";
+            Text = "GPA Calculator";
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
