@@ -838,9 +838,10 @@ namespace GPA_Calculator
                 decimal ects = numericUpDown1.Value;
                 string grade = gradeSelector.Text;
 
-                courseMap.Remove(coursesLbx.SelectedItem.ToString());
+                
                 if (!courseMap.ContainsKey(name))
                 {
+                    courseMap.Remove(coursesLbx.SelectedItem.ToString());
                     courseMap.Add(name, (ects, grade));
 
                     List<string> course_names = new List<string>();
