@@ -15,6 +15,7 @@ A simple desktop application built with C# and WinForms for calculating and plan
 - Edit course list:
   - Delete individual courses
   - Clear all courses
+  - Edit course data
 - Sort courses by:
   - Name
   - ECTS
