@@ -834,14 +834,19 @@ namespace GPA_Calculator
         {
             if (courseMap.Count != 0)
             {
+               
                 string name = courseNameBox.Text;
                 decimal ects = numericUpDown1.Value;
                 string grade = gradeSelector.Text;
 
-                
+                string oldname = coursesLbx.SelectedItem.ToString();
+                decimal oldects = courseMap[oldname].ects;
+                string oldgrade = courseMap[oldname].grade;
+
+                courseMap.Remove(coursesLbx.SelectedItem.ToString());
                 if (!courseMap.ContainsKey(name))
                 {
-                    courseMap.Remove(coursesLbx.SelectedItem.ToString());
+                    
                     courseMap.Add(name, (ects, grade));
 
                     List<string> course_names = new List<string>();
@@ -868,6 +873,7 @@ namespace GPA_Calculator
                 } else
                 {
                     MessageBox.Show("Course already exists!");
+                    courseMap.Add(oldname, (oldects, oldgrade));
                 }
                 
 
