@@ -42,11 +42,16 @@
             fileToolStripMenuItem = new ToolStripMenuItem();
             saveToolStripMenuItem = new ToolStripMenuItem();
             loadToolStripMenuItem = new ToolStripMenuItem();
+            clearSaveToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             label3 = new Label();
             gradeSelector = new ComboBox();
             pointsLbx = new ListBox();
             gradeLbx = new ListBox();
+            label4 = new Label();
+            sortBtn = new Button();
+            sortAscDescBox = new ComboBox();
+            sortVariableBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
@@ -74,7 +79,8 @@
             // 
             // coursesLbx
             // 
-            coursesLbx.Font = new Font("Segoe UI", 12F, FontStyle.Italic, GraphicsUnit.Point, 0);
+            coursesLbx.BackColor = Color.Honeydew;
+            coursesLbx.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             coursesLbx.FormattingEnabled = true;
             coursesLbx.ItemHeight = 21;
             coursesLbx.Location = new Point(12, 91);
@@ -86,7 +92,9 @@
             // 
             // numericUpDown1
             // 
-            numericUpDown1.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            numericUpDown1.DecimalPlaces = 1;
+            numericUpDown1.Font = new Font("Segoe UI", 12F);
+            numericUpDown1.Increment = new decimal(new int[] { 5, 0, 0, 65536 });
             numericUpDown1.Location = new Point(188, 56);
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(49, 29);
@@ -95,11 +103,12 @@
             // gpaResultLbl
             // 
             gpaResultLbl.AutoSize = true;
+            gpaResultLbl.BackColor = SystemColors.Control;
             gpaResultLbl.BorderStyle = BorderStyle.Fixed3D;
-            gpaResultLbl.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            gpaResultLbl.Location = new Point(201, 374);
+            gpaResultLbl.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            gpaResultLbl.Location = new Point(198, 374);
             gpaResultLbl.Name = "gpaResultLbl";
-            gpaResultLbl.Size = new Size(100, 34);
+            gpaResultLbl.Size = new Size(108, 34);
             gpaResultLbl.TabIndex = 5;
             gpaResultLbl.Text = "GPA = :)";
             gpaResultLbl.TextAlign = ContentAlignment.MiddleCenter;
@@ -123,7 +132,7 @@
             clearAllBtn.Location = new Point(100, 374);
             clearAllBtn.Name = "clearAllBtn";
             clearAllBtn.RightToLeft = RightToLeft.No;
-            clearAllBtn.Size = new Size(82, 29);
+            clearAllBtn.Size = new Size(92, 29);
             clearAllBtn.TabIndex = 7;
             clearAllBtn.Text = "Clear All";
             clearAllBtn.UseVisualStyleBackColor = false;
@@ -132,7 +141,6 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.FlatStyle = FlatStyle.Popup;
             label1.Location = new Point(12, 38);
             label1.Name = "label1";
             label1.Size = new Size(79, 15);
@@ -159,7 +167,7 @@
             // 
             // fileToolStripMenuItem
             // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, loadToolStripMenuItem });
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { saveToolStripMenuItem, loadToolStripMenuItem, clearSaveToolStripMenuItem });
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(37, 20);
             fileToolStripMenuItem.Text = "File";
@@ -167,20 +175,30 @@
             // saveToolStripMenuItem
             // 
             saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            saveToolStripMenuItem.Size = new Size(100, 22);
+            saveToolStripMenuItem.Size = new Size(128, 22);
             saveToolStripMenuItem.Text = "Save";
+            saveToolStripMenuItem.Click += saveToolStripMenuItem_Click;
             // 
             // loadToolStripMenuItem
             // 
             loadToolStripMenuItem.Name = "loadToolStripMenuItem";
-            loadToolStripMenuItem.Size = new Size(100, 22);
+            loadToolStripMenuItem.Size = new Size(128, 22);
             loadToolStripMenuItem.Text = "Load";
+            loadToolStripMenuItem.Click += loadToolStripMenuItem_Click;
+            // 
+            // clearSaveToolStripMenuItem
+            // 
+            clearSaveToolStripMenuItem.Name = "clearSaveToolStripMenuItem";
+            clearSaveToolStripMenuItem.Size = new Size(128, 22);
+            clearSaveToolStripMenuItem.Text = "Clear Save";
+            clearSaveToolStripMenuItem.Click += clearSaveToolStripMenuItem_Click;
             // 
             // aboutToolStripMenuItem
             // 
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(52, 20);
             aboutToolStripMenuItem.Text = "About";
+            aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
             // label3
             // 
@@ -194,7 +212,7 @@
             // gradeSelector
             // 
             gradeSelector.DropDownStyle = ComboBoxStyle.DropDownList;
-            gradeSelector.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            gradeSelector.Font = new Font("Segoe UI", 12F);
             gradeSelector.FormattingEnabled = true;
             gradeSelector.Items.AddRange(new object[] { "-3", "00", "02", "4", "7", "10", "12" });
             gradeSelector.Location = new Point(243, 56);
@@ -204,7 +222,8 @@
             // 
             // pointsLbx
             // 
-            pointsLbx.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            pointsLbx.BackColor = Color.LightGoldenrodYellow;
+            pointsLbx.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             pointsLbx.FormattingEnabled = true;
             pointsLbx.ItemHeight = 21;
             pointsLbx.Location = new Point(188, 91);
@@ -215,7 +234,8 @@
             // 
             // gradeLbx
             // 
-            gradeLbx.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            gradeLbx.BackColor = Color.LavenderBlush;
+            gradeLbx.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             gradeLbx.FormattingEnabled = true;
             gradeLbx.ItemHeight = 21;
             gradeLbx.Location = new Point(243, 91);
@@ -224,11 +244,57 @@
             gradeLbx.TabIndex = 15;
             gradeLbx.SelectedIndexChanged += gradeLbx_SelectedIndexChanged;
             // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(300, 426);
+            label4.Name = "label4";
+            label4.Size = new Size(47, 15);
+            label4.TabIndex = 16;
+            label4.Text = "ver. 1.0.";
+            // 
+            // sortBtn
+            // 
+            sortBtn.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            sortBtn.Location = new Point(12, 415);
+            sortBtn.Name = "sortBtn";
+            sortBtn.Size = new Size(82, 23);
+            sortBtn.TabIndex = 17;
+            sortBtn.Text = "Sort By: ";
+            sortBtn.UseVisualStyleBackColor = true;
+            sortBtn.Click += sortBtn_Click;
+            // 
+            // sortAscDescBox
+            // 
+            sortAscDescBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sortAscDescBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            sortAscDescBox.FormattingEnabled = true;
+            sortAscDescBox.Items.AddRange(new object[] { "Desc.", "Asc." });
+            sortAscDescBox.Location = new Point(100, 416);
+            sortAscDescBox.Name = "sortAscDescBox";
+            sortAscDescBox.Size = new Size(42, 21);
+            sortAscDescBox.TabIndex = 18;
+            // 
+            // sortVariableBox
+            // 
+            sortVariableBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            sortVariableBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            sortVariableBox.FormattingEnabled = true;
+            sortVariableBox.Items.AddRange(new object[] { "Course Name", "ECTS", "Grade" });
+            sortVariableBox.Location = new Point(148, 416);
+            sortVariableBox.Name = "sortVariableBox";
+            sortVariableBox.Size = new Size(42, 21);
+            sortVariableBox.TabIndex = 19;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(359, 450);
+            Controls.Add(sortVariableBox);
+            Controls.Add(sortAscDescBox);
+            Controls.Add(sortBtn);
+            Controls.Add(label4);
             Controls.Add(gradeLbx);
             Controls.Add(pointsLbx);
             Controls.Add(gradeSelector);
@@ -276,5 +342,10 @@
         private ComboBox gradeSelector;
         private ListBox pointsLbx;
         private ListBox gradeLbx;
+        private ToolStripMenuItem clearSaveToolStripMenuItem;
+        private Label label4;
+        private Button sortBtn;
+        private ComboBox sortAscDescBox;
+        private ComboBox sortVariableBox;
     }
 }
