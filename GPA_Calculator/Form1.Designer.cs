@@ -44,6 +44,9 @@
             loadToolStripMenuItem = new ToolStripMenuItem();
             clearSaveToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            modeToolStripMenuItem = new ToolStripMenuItem();
+            editToolStripMenuItem = new ToolStripMenuItem();
+            planToolStripMenuItem = new ToolStripMenuItem();
             label3 = new Label();
             gradeSelector = new ComboBox();
             pointsLbx = new ListBox();
@@ -52,8 +55,18 @@
             sortBtn = new Button();
             sortAscDescBox = new ComboBox();
             sortVariableBox = new ComboBox();
+            controlBox = new GroupBox();
+            clearPlansBtn = new Button();
+            minBtn = new Button();
+            maxBtn = new Button();
+            planBtn = new Button();
+            targetLbl = new Label();
+            targetGPAUpDown = new NumericUpDown();
+            totalECTSLbl = new Label();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             menuStrip1.SuspendLayout();
+            controlBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)targetGPAUpDown).BeginInit();
             SuspendLayout();
             // 
             // courseNameBox
@@ -80,12 +93,12 @@
             // coursesLbx
             // 
             coursesLbx.BackColor = Color.Honeydew;
-            coursesLbx.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            coursesLbx.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
             coursesLbx.FormattingEnabled = true;
-            coursesLbx.ItemHeight = 21;
+            coursesLbx.ItemHeight = 17;
             coursesLbx.Location = new Point(12, 91);
             coursesLbx.Name = "coursesLbx";
-            coursesLbx.Size = new Size(180, 277);
+            coursesLbx.Size = new Size(180, 276);
             coursesLbx.TabIndex = 3;
             coursesLbx.Click += coursesLbx_Click;
             coursesLbx.SelectedIndexChanged += coursesLbx_SelectedIndexChanged;
@@ -106,7 +119,7 @@
             gpaResultLbl.BackColor = SystemColors.Control;
             gpaResultLbl.BorderStyle = BorderStyle.Fixed3D;
             gpaResultLbl.Font = new Font("Segoe UI Semibold", 18F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            gpaResultLbl.Location = new Point(198, 374);
+            gpaResultLbl.Location = new Point(198, 391);
             gpaResultLbl.Name = "gpaResultLbl";
             gpaResultLbl.Size = new Size(108, 34);
             gpaResultLbl.TabIndex = 5;
@@ -116,7 +129,7 @@
             // deleteCourseBtn
             // 
             deleteCourseBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            deleteCourseBtn.Location = new Point(12, 374);
+            deleteCourseBtn.Location = new Point(6, 17);
             deleteCourseBtn.Name = "deleteCourseBtn";
             deleteCourseBtn.Size = new Size(82, 29);
             deleteCourseBtn.TabIndex = 6;
@@ -129,10 +142,10 @@
             clearAllBtn.BackColor = Color.Transparent;
             clearAllBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             clearAllBtn.ForeColor = Color.Black;
-            clearAllBtn.Location = new Point(100, 374);
+            clearAllBtn.Location = new Point(93, 17);
             clearAllBtn.Name = "clearAllBtn";
             clearAllBtn.RightToLeft = RightToLeft.No;
-            clearAllBtn.Size = new Size(92, 29);
+            clearAllBtn.Size = new Size(80, 29);
             clearAllBtn.TabIndex = 7;
             clearAllBtn.Text = "Clear All";
             clearAllBtn.UseVisualStyleBackColor = false;
@@ -158,7 +171,7 @@
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, aboutToolStripMenuItem });
+            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, aboutToolStripMenuItem, modeToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new Size(359, 24);
@@ -200,6 +213,27 @@
             aboutToolStripMenuItem.Text = "About";
             aboutToolStripMenuItem.Click += aboutToolStripMenuItem_Click;
             // 
+            // modeToolStripMenuItem
+            // 
+            modeToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { editToolStripMenuItem, planToolStripMenuItem });
+            modeToolStripMenuItem.Name = "modeToolStripMenuItem";
+            modeToolStripMenuItem.Size = new Size(50, 20);
+            modeToolStripMenuItem.Text = "Mode";
+            // 
+            // editToolStripMenuItem
+            // 
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(97, 22);
+            editToolStripMenuItem.Text = "Edit";
+            editToolStripMenuItem.Click += editToolStripMenuItem_Click;
+            // 
+            // planToolStripMenuItem
+            // 
+            planToolStripMenuItem.Name = "planToolStripMenuItem";
+            planToolStripMenuItem.Size = new Size(97, 22);
+            planToolStripMenuItem.Text = "Plan";
+            planToolStripMenuItem.Click += planToolStripMenuItem_Click;
+            // 
             // label3
             // 
             label3.AutoSize = true;
@@ -214,7 +248,7 @@
             gradeSelector.DropDownStyle = ComboBoxStyle.DropDownList;
             gradeSelector.Font = new Font("Segoe UI", 12F);
             gradeSelector.FormattingEnabled = true;
-            gradeSelector.Items.AddRange(new object[] { "-3", "00", "02", "4", "7", "10", "12" });
+            gradeSelector.Items.AddRange(new object[] { " ", "-3", "00", "02", "4", "7", "10", "12" });
             gradeSelector.Location = new Point(243, 56);
             gradeSelector.Name = "gradeSelector";
             gradeSelector.Size = new Size(49, 29);
@@ -223,42 +257,42 @@
             // pointsLbx
             // 
             pointsLbx.BackColor = Color.LightGoldenrodYellow;
-            pointsLbx.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            pointsLbx.Font = new Font("Segoe UI", 9.75F, FontStyle.Italic, GraphicsUnit.Point, 0);
             pointsLbx.FormattingEnabled = true;
-            pointsLbx.ItemHeight = 21;
+            pointsLbx.ItemHeight = 17;
             pointsLbx.Location = new Point(188, 91);
             pointsLbx.Name = "pointsLbx";
-            pointsLbx.Size = new Size(59, 277);
+            pointsLbx.Size = new Size(59, 276);
             pointsLbx.TabIndex = 14;
             pointsLbx.SelectedIndexChanged += pointsLbx_SelectedIndexChanged;
             // 
             // gradeLbx
             // 
             gradeLbx.BackColor = Color.LavenderBlush;
-            gradeLbx.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            gradeLbx.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             gradeLbx.FormattingEnabled = true;
-            gradeLbx.ItemHeight = 21;
+            gradeLbx.ItemHeight = 17;
             gradeLbx.Location = new Point(243, 91);
             gradeLbx.Name = "gradeLbx";
-            gradeLbx.Size = new Size(103, 277);
+            gradeLbx.Size = new Size(103, 276);
             gradeLbx.TabIndex = 15;
             gradeLbx.SelectedIndexChanged += gradeLbx_SelectedIndexChanged;
             // 
             // label4
             // 
             label4.AutoSize = true;
-            label4.Location = new Point(300, 426);
+            label4.Location = new Point(312, 460);
             label4.Name = "label4";
             label4.Size = new Size(47, 15);
             label4.TabIndex = 16;
-            label4.Text = "ver. 1.0.";
+            label4.Text = "ver. 2.0.";
             // 
             // sortBtn
             // 
             sortBtn.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            sortBtn.Location = new Point(12, 415);
+            sortBtn.Location = new Point(7, 62);
             sortBtn.Name = "sortBtn";
-            sortBtn.Size = new Size(82, 23);
+            sortBtn.Size = new Size(77, 23);
             sortBtn.TabIndex = 17;
             sortBtn.Text = "Sort By: ";
             sortBtn.UseVisualStyleBackColor = true;
@@ -270,7 +304,7 @@
             sortAscDescBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             sortAscDescBox.FormattingEnabled = true;
             sortAscDescBox.Items.AddRange(new object[] { "Desc.", "Asc." });
-            sortAscDescBox.Location = new Point(100, 416);
+            sortAscDescBox.Location = new Point(86, 63);
             sortAscDescBox.Name = "sortAscDescBox";
             sortAscDescBox.Size = new Size(42, 21);
             sortAscDescBox.TabIndex = 18;
@@ -280,20 +314,121 @@
             sortVariableBox.DropDownStyle = ComboBoxStyle.DropDownList;
             sortVariableBox.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             sortVariableBox.FormattingEnabled = true;
-            sortVariableBox.Items.AddRange(new object[] { "Course Name", "ECTS", "Grade" });
-            sortVariableBox.Location = new Point(148, 416);
+            sortVariableBox.Items.AddRange(new object[] { "Name", "ECTS", "Grade" });
+            sortVariableBox.Location = new Point(131, 63);
             sortVariableBox.Name = "sortVariableBox";
             sortVariableBox.Size = new Size(42, 21);
             sortVariableBox.TabIndex = 19;
+            // 
+            // controlBox
+            // 
+            controlBox.Controls.Add(clearPlansBtn);
+            controlBox.Controls.Add(minBtn);
+            controlBox.Controls.Add(maxBtn);
+            controlBox.Controls.Add(sortVariableBox);
+            controlBox.Controls.Add(sortBtn);
+            controlBox.Controls.Add(sortAscDescBox);
+            controlBox.Controls.Add(clearAllBtn);
+            controlBox.Controls.Add(planBtn);
+            controlBox.Controls.Add(targetLbl);
+            controlBox.Controls.Add(deleteCourseBtn);
+            controlBox.Controls.Add(targetGPAUpDown);
+            controlBox.Location = new Point(12, 374);
+            controlBox.Name = "controlBox";
+            controlBox.Size = new Size(180, 98);
+            controlBox.TabIndex = 20;
+            controlBox.TabStop = false;
+            controlBox.Text = "Edit";
+            // 
+            // clearPlansBtn
+            // 
+            clearPlansBtn.BackColor = Color.Transparent;
+            clearPlansBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            clearPlansBtn.ForeColor = Color.Black;
+            clearPlansBtn.Location = new Point(134, 17);
+            clearPlansBtn.Name = "clearPlansBtn";
+            clearPlansBtn.RightToLeft = RightToLeft.No;
+            clearPlansBtn.Size = new Size(39, 29);
+            clearPlansBtn.TabIndex = 24;
+            clearPlansBtn.Text = "C";
+            clearPlansBtn.UseVisualStyleBackColor = false;
+            clearPlansBtn.Click += button1_Click_1;
+            // 
+            // minBtn
+            // 
+            minBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            minBtn.Location = new Point(6, 17);
+            minBtn.Name = "minBtn";
+            minBtn.Size = new Size(58, 29);
+            minBtn.TabIndex = 23;
+            minBtn.Text = "Min";
+            minBtn.UseVisualStyleBackColor = true;
+            minBtn.Click += minBtn_Click;
+            // 
+            // maxBtn
+            // 
+            maxBtn.BackColor = Color.Transparent;
+            maxBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            maxBtn.ForeColor = Color.Black;
+            maxBtn.Location = new Point(71, 17);
+            maxBtn.Name = "maxBtn";
+            maxBtn.RightToLeft = RightToLeft.No;
+            maxBtn.Size = new Size(58, 29);
+            maxBtn.TabIndex = 23;
+            maxBtn.Text = "Max";
+            maxBtn.UseVisualStyleBackColor = false;
+            maxBtn.Click += maxBtn_Click;
+            // 
+            // planBtn
+            // 
+            planBtn.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            planBtn.Location = new Point(76, 62);
+            planBtn.Name = "planBtn";
+            planBtn.Size = new Size(98, 28);
+            planBtn.TabIndex = 22;
+            planBtn.Text = "Plan";
+            planBtn.UseVisualStyleBackColor = true;
+            planBtn.Click += planBtn_Click;
+            // 
+            // targetLbl
+            // 
+            targetLbl.AutoSize = true;
+            targetLbl.Location = new Point(6, 48);
+            targetLbl.Name = "targetLbl";
+            targetLbl.Size = new Size(64, 15);
+            targetLbl.TabIndex = 22;
+            targetLbl.Text = "Target GPA";
+            targetLbl.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // targetGPAUpDown
+            // 
+            targetGPAUpDown.DecimalPlaces = 2;
+            targetGPAUpDown.Font = new Font("Segoe UI", 12F);
+            targetGPAUpDown.Increment = new decimal(new int[] { 1, 0, 0, 131072 });
+            targetGPAUpDown.Location = new Point(8, 63);
+            targetGPAUpDown.Name = "targetGPAUpDown";
+            targetGPAUpDown.Size = new Size(64, 29);
+            targetGPAUpDown.TabIndex = 22;
+            // 
+            // totalECTSLbl
+            // 
+            totalECTSLbl.AutoSize = true;
+            totalECTSLbl.BackColor = SystemColors.Control;
+            totalECTSLbl.BorderStyle = BorderStyle.Fixed3D;
+            totalECTSLbl.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold | FontStyle.Italic);
+            totalECTSLbl.Location = new Point(198, 436);
+            totalECTSLbl.Name = "totalECTSLbl";
+            totalECTSLbl.Size = new Size(109, 21);
+            totalECTSLbl.TabIndex = 21;
+            totalECTSLbl.Text = "Total ECTS = :) ";
+            totalECTSLbl.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(359, 450);
-            Controls.Add(sortVariableBox);
-            Controls.Add(sortAscDescBox);
-            Controls.Add(sortBtn);
+            ClientSize = new Size(359, 484);
+            Controls.Add(totalECTSLbl);
             Controls.Add(label4);
             Controls.Add(gradeLbx);
             Controls.Add(pointsLbx);
@@ -301,14 +436,13 @@
             Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
-            Controls.Add(clearAllBtn);
-            Controls.Add(deleteCourseBtn);
             Controls.Add(gpaResultLbl);
             Controls.Add(numericUpDown1);
             Controls.Add(coursesLbx);
             Controls.Add(addCourseBtn);
             Controls.Add(courseNameBox);
             Controls.Add(menuStrip1);
+            Controls.Add(controlBox);
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
@@ -318,6 +452,9 @@
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            controlBox.ResumeLayout(false);
+            controlBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)targetGPAUpDown).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -347,5 +484,16 @@
         private Button sortBtn;
         private ComboBox sortAscDescBox;
         private ComboBox sortVariableBox;
+        private GroupBox controlBox;
+        private Label totalECTSLbl;
+        private ToolStripMenuItem modeToolStripMenuItem;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem planToolStripMenuItem;
+        private Label targetLbl;
+        private NumericUpDown targetGPAUpDown;
+        private Button planBtn;
+        private Button minBtn;
+        private Button maxBtn;
+        private Button clearPlansBtn;
     }
 }

@@ -7,6 +7,7 @@ namespace GPA_Calculator
     {
         Dictionary<string, (decimal ects, string grade)> courseMap = new Dictionary<string, (decimal ects, string grade)>();
         SqliteConnection connection;
+        (string, string, string, string, string, string, string) grades = ("(-3)", "(00)", "(02)", "(4)", "(7)", "(10)", "(12)");
 
         public Form1()
         {
@@ -14,6 +15,14 @@ namespace GPA_Calculator
             gradeSelector.SelectedIndex = 4;
             sortAscDescBox.SelectedIndex = 0;
             sortVariableBox.SelectedIndex = 0;
+
+            targetGPAUpDown.Visible = false;
+            planBtn.Visible = false;
+            targetLbl.Visible = false;
+            maxBtn.Visible = false;
+            minBtn.Visible = false;
+            clearPlansBtn.Visible = false;
+
 
             string connectionString = "Data Source=courses.db;";
             connection = new SqliteConnection(connectionString);
@@ -26,6 +35,7 @@ namespace GPA_Calculator
         {
             if (numericUpDown1.Value >= 0 && courseNameBox.Text != "")
             {
+
                 if (courseMap.ContainsKey(courseNameBox.Text))
                 {
                     MessageBox.Show("Course already exists!");
@@ -130,6 +140,17 @@ namespace GPA_Calculator
 
         private void updateGPA()
         {
+            (decimal, decimal) newResults = calculateGpa(courseMap);
+            decimal new_gpa = newResults.Item1;
+            decimal total_ects = newResults.Item2;
+
+            gpaResultLbl.Text = $"GPA = {Math.Round(new_gpa, 2)}";
+            totalECTSLbl.Text = $"Total ECTS = {total_ects}";
+
+        }
+
+        private (decimal, decimal) calculateGpa(Dictionary<string, (decimal ects, string grade)> courses)
+        {
             if (courseMap.Count == 0)
             {
                 gpaResultLbl.Text = "GPA = :)";
@@ -139,12 +160,15 @@ namespace GPA_Calculator
             {
                 decimal sum_of_top = 0;
                 decimal sum_of_bottom = 0;
+                decimal sum_of_ects = 0;
 
-                foreach (var pair in courseMap)
+                foreach (var pair in courses)
                 {
-                    if (pair.Value.grade != "")
+                    sum_of_ects = sum_of_ects + pair.Value.ects;
+                    if (pair.Value.grade != " ")
                     {
-                        sum_of_top = sum_of_top + (pair.Value.ects * decimal.Parse(pair.Value.grade));
+
+                        sum_of_top = sum_of_top + (pair.Value.ects * decimal.Parse(pair.Value.grade.Trim('(', ')')));
                         sum_of_bottom = sum_of_bottom + pair.Value.ects;
                     }
                 }
@@ -152,29 +176,40 @@ namespace GPA_Calculator
                 if (sum_of_bottom != 0)
                 {
                     decimal new_gpa = sum_of_top / sum_of_bottom;
+                    return (new_gpa, sum_of_ects);
 
-                    gpaResultLbl.Text = $"GPA = {Math.Round(new_gpa, 2)}";
                 }
             }
-
+            return (0, 0);
         }
 
         private void coursesLbx_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            pointsLbx.SelectedIndex = coursesLbx.SelectedIndex;
-            gradeLbx.SelectedIndex = coursesLbx.SelectedIndex;
+        {   
+            if (pointsLbx.SelectedIndex != null && gradeLbx.SelectedIndex != null) {
+                pointsLbx.SelectedIndex = coursesLbx.SelectedIndex;
+                gradeLbx.SelectedIndex = coursesLbx.SelectedIndex;
+            }
+            
         }
 
         private void pointsLbx_SelectedIndexChanged(object sender, EventArgs e)
         {
-            coursesLbx.SelectedIndex = pointsLbx.SelectedIndex;
-            gradeLbx.SelectedIndex = pointsLbx.SelectedIndex;
+            if (coursesLbx.SelectedIndex != null && gradeLbx.SelectedIndex != null)
+            {
+                coursesLbx.SelectedIndex = pointsLbx.SelectedIndex;
+                gradeLbx.SelectedIndex = pointsLbx.SelectedIndex;
+
+            }
         }
 
         private void gradeLbx_SelectedIndexChanged(object sender, EventArgs e)
         {
-            pointsLbx.SelectedIndex = gradeLbx.SelectedIndex;
-            coursesLbx.SelectedIndex = gradeLbx.SelectedIndex;
+            if (pointsLbx.SelectedIndex != null && coursesLbx.SelectedIndex != null)
+            {
+                pointsLbx.SelectedIndex = gradeLbx.SelectedIndex;
+                coursesLbx.SelectedIndex = gradeLbx.SelectedIndex;
+            }
+            
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -315,6 +350,7 @@ namespace GPA_Calculator
                             course_grades.Add($"{pair.Value.grade}");
                         }
 
+
                         coursesLbx.DataSource = null;
                         coursesLbx.DataSource = course_names;
 
@@ -340,6 +376,8 @@ namespace GPA_Calculator
                             course_points.Add($"{pair.Value.ects}");
                             course_grades.Add($"{pair.Value.grade}");
                         }
+
+                        
 
                         coursesLbx.DataSource = null;
                         coursesLbx.DataSource = course_names;
@@ -422,12 +460,27 @@ namespace GPA_Calculator
                         List<string> course_points = new List<string>();
                         List<string> course_grades = new List<string>();
 
-                        foreach (var pair in courseMap.OrderByDescending(p => decimal.Parse(p.Value.grade)))
+                        foreach (var pair in courseMap.Where(p => p.Value.grade != " " && 
+                                                                !(p.Value.grade.StartsWith("(")))
+                                                       .OrderByDescending(p => decimal.Parse(p.Value.grade))){
+                            course_names.Add(pair.Key);
+                            course_points.Add($"{pair.Value.ects}");
+                            course_grades.Add($"{pair.Value.grade}");
+                        }
+                        foreach (var pair in courseMap.Where(p => (p.Value.grade.StartsWith("(")))
+                                                       .OrderByDescending(p => decimal.Parse(p.Value.grade.Trim('(', ')'))))
                         {
                             course_names.Add(pair.Key);
                             course_points.Add($"{pair.Value.ects}");
                             course_grades.Add($"{pair.Value.grade}");
                         }
+                        foreach (var pair in courseMap.Where(p => p.Value.grade == " "))
+                        {
+                            course_names.Add(pair.Key);
+                            course_points.Add($"{pair.Value.ects}");
+                            course_grades.Add($"{pair.Value.grade}");
+                        }
+
 
                         coursesLbx.DataSource = null;
                         coursesLbx.DataSource = course_names;
@@ -449,7 +502,22 @@ namespace GPA_Calculator
                         List<string> course_points = new List<string>();
                         List<string> course_grades = new List<string>();
 
-                        foreach (var pair in courseMap.OrderBy(p => decimal.Parse(p.Value.grade)))
+                        foreach (var pair in courseMap.Where(p => p.Value.grade != " " &&
+                                                                !(p.Value.grade.StartsWith("(")))
+                                                       .OrderBy(p => decimal.Parse(p.Value.grade)))
+                        {
+                            course_names.Add(pair.Key);
+                            course_points.Add($"{pair.Value.ects}");
+                            course_grades.Add($"{pair.Value.grade}");
+                        }
+                        foreach (var pair in courseMap.Where(p => (p.Value.grade.StartsWith("(")))
+                                                       .OrderBy(p => decimal.Parse(p.Value.grade.Trim('(', ')'))))
+                        {
+                            course_names.Add(pair.Key);
+                            course_points.Add($"{pair.Value.ects}");
+                            course_grades.Add($"{pair.Value.grade}");
+                        }
+                        foreach (var pair in courseMap.Where(p => p.Value.grade == " "))
                         {
                             course_names.Add(pair.Key);
                             course_points.Add($"{pair.Value.ects}");
@@ -476,6 +544,269 @@ namespace GPA_Calculator
                     break;
             }
 
+        }
+
+        private void editToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            controlBox.Text = "Edit";
+
+            targetGPAUpDown.Visible = false;
+            planBtn.Visible = false;
+            targetLbl.Visible = false;
+            maxBtn.Visible = false;
+            minBtn.Visible = false;
+            clearPlansBtn.Visible = false;
+
+            deleteCourseBtn.Visible = true;
+            clearAllBtn.Visible = true;
+            sortBtn.Visible = true;
+            sortAscDescBox.Visible = true;
+            sortVariableBox.Visible = true;
+            addCourseBtn.Enabled = true;
+            courseNameBox.Enabled = true;
+            numericUpDown1.Enabled = true;
+            gradeSelector.Enabled = true;
+
+
+        }
+
+        private void planToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            controlBox.Text = "Plan";
+
+            deleteCourseBtn.Visible = false;
+            clearAllBtn.Visible = false;
+            sortBtn.Visible = false;
+            sortAscDescBox.Visible = false;
+            sortVariableBox.Visible = false;
+            addCourseBtn.Enabled = false;
+            courseNameBox.Enabled = false;
+            numericUpDown1.Enabled = false;
+            gradeSelector.Enabled = false;
+
+
+            targetGPAUpDown.Visible = true;
+            planBtn.Visible = true;
+            targetLbl.Visible = true;
+            maxBtn.Visible = true;
+            minBtn.Visible = true;
+            clearPlansBtn.Visible = true;
+        }
+
+        private void planBtn_Click(object sender, EventArgs e)
+        {
+            planMinimumRoute();
+
+        }
+
+        private void planMinimumRoute()
+        {
+            var progression = new List<string> { " ", "(-3)", "(00)", "(02)", "(4)", "(7)", "(10)", "(12)" };
+            Dictionary<string, (decimal ects, string grade)> courseCopy = new Dictionary<string, (decimal, string)>(courseMap);
+            bool targetReached = false;
+            bool targetUnreachable = false;
+
+            while (!targetReached && !targetUnreachable)
+            {
+                // Check if all upgradeable courses are already at max
+                if (courseCopy.Values.All(v => !v.grade.StartsWith("(") && v.grade != " " || v.grade == "(12)"))
+                {
+                    MessageBox.Show("Target GPA not reachable :(");
+                    targetUnreachable = true;
+                    break;
+                }
+                else if (decimal.Parse(gpaResultLbl.Text.Trim('G', 'P', 'A', ' ', '=')) >= targetGPAUpDown.Value)
+                {
+                    MessageBox.Show("Target GPA already reached ;)");
+                    targetUnreachable = true;
+                    break;
+                }
+
+                // Get all upgradeable courses, sorted by their current grade level (lowest first)
+                // so we spread grades evenly rather than piling onto one course
+                var upgradeables = courseCopy
+                    .Where(p => p.Value.grade == " " && p.Value.ects != 0 || p.Value.grade.StartsWith("(") && p.Value.grade != "(12)")
+                    .OrderBy(p => progression.IndexOf(p.Value.grade))
+                    .ThenByDescending(p => p.Value.ects)
+                    .ToList();
+
+                foreach (var pair in upgradeables)
+                {
+                    int idx = progression.IndexOf(pair.Value.grade);
+                    if (idx >= 0 && idx < progression.Count - 1)
+                    {
+                        courseCopy[pair.Key] = (pair.Value.ects, progression[idx + 1]);
+
+                        if (calculateGpa(courseCopy).Item1 >= targetGPAUpDown.Value)
+                        {
+                            targetReached = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (targetReached)
+            {
+                MessageBox.Show("Target GPA is reachable!");
+                courseMap = new Dictionary<string, (decimal ects, string grade)>(courseCopy);
+
+                List<string> course_names = new List<string>();
+                List<string> course_points = new List<string>();
+                List<string> course_grades = new List<string>();
+
+                foreach (var pair in courseMap)
+                {
+                    course_names.Add(pair.Key);
+                    course_points.Add($"{pair.Value.ects}");
+                    course_grades.Add($"{pair.Value.grade}");
+                }
+
+                coursesLbx.DataSource = null;
+                coursesLbx.DataSource = course_names;
+                pointsLbx.DataSource = null;
+                pointsLbx.DataSource = course_points;
+                gradeLbx.DataSource = null;
+                gradeLbx.DataSource = course_grades;
+
+                updateGPA();
+            }
+        }
+
+        private void maxBtn_Click(object sender, EventArgs e)
+        {
+            var progression = new List<string> { " ", "(-3)", "(00)", "(02)", "(4)", "(7)", "(10)", "(12)" };
+            Dictionary<string, (decimal ects, string grade)> courseCopy = new Dictionary<string, (decimal, string)>(courseMap);
+
+            var upgradeables = courseCopy
+                    .Where(p => p.Value.grade == " " && p.Value.ects != 0 || p.Value.grade.StartsWith("(") && p.Value.grade != "(12)")
+                    .OrderBy(p => progression.IndexOf(p.Value.grade))
+                    .ThenByDescending(p => p.Value.ects)
+                    .ToList();
+
+            foreach (var pair in upgradeables)
+            {
+                courseCopy[pair.Key] = (pair.Value.ects, "(12)");
+
+            }
+
+            MessageBox.Show("Calculating max possible GPA");
+            courseMap = new Dictionary<string, (decimal ects, string grade)>(courseCopy);
+
+            List<string> course_names = new List<string>();
+            List<string> course_points = new List<string>();
+            List<string> course_grades = new List<string>();
+
+            foreach (var pair in courseMap)
+            {
+                course_names.Add(pair.Key);
+                course_points.Add($"{pair.Value.ects}");
+                course_grades.Add($"{pair.Value.grade}");
+            }
+
+            coursesLbx.DataSource = null;
+            coursesLbx.DataSource = course_names;
+            pointsLbx.DataSource = null;
+            pointsLbx.DataSource = course_points;
+            gradeLbx.DataSource = null;
+            gradeLbx.DataSource = course_grades;
+
+            updateGPA();
+
+        }
+
+        private void minBtn_Click(object sender, EventArgs e)
+        {
+            var progression = new List<string> { " ", "(-3)", "(00)", "(02)", "(4)", "(7)", "(10)", "(12)" };
+            Dictionary<string, (decimal ects, string grade)> courseCopy = new Dictionary<string, (decimal, string)>(courseMap);
+
+            var previous = courseCopy
+                    .Where(p => p.Value.grade.StartsWith("("))
+                    .OrderBy(p => progression.IndexOf(p.Value.grade))
+                    .ThenByDescending(p => p.Value.ects)
+                    .ToList();
+
+            foreach (var pair in previous)
+            {
+                courseCopy[pair.Key] = (pair.Value.ects, " ");
+
+            }
+
+            var upgradeables = courseCopy
+                    .Where(p => p.Value.grade == " " && p.Value.ects != 0 || p.Value.grade.StartsWith("(") && p.Value.grade != "(12)")
+                    .OrderBy(p => progression.IndexOf(p.Value.grade))
+                    .ThenByDescending(p => p.Value.ects)
+                    .ToList();
+
+            foreach (var pair in upgradeables)
+            {
+                courseCopy[pair.Key] = (pair.Value.ects, "(02)");
+
+            }
+
+            MessageBox.Show("Calculating minimum possible (passing) GPA");
+            courseMap = new Dictionary<string, (decimal ects, string grade)>(courseCopy);
+
+            List<string> course_names = new List<string>();
+            List<string> course_points = new List<string>();
+            List<string> course_grades = new List<string>();
+
+            foreach (var pair in courseMap)
+            {
+                course_names.Add(pair.Key);
+                course_points.Add($"{pair.Value.ects}");
+                course_grades.Add($"{pair.Value.grade}");
+            }
+
+            coursesLbx.DataSource = null;
+            coursesLbx.DataSource = course_names;
+            pointsLbx.DataSource = null;
+            pointsLbx.DataSource = course_points;
+            gradeLbx.DataSource = null;
+            gradeLbx.DataSource = course_grades;
+
+            updateGPA();
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            var progression = new List<string> { " ", "(-3)", "(00)", "(02)", "(4)", "(7)", "(10)", "(12)" };
+            Dictionary<string, (decimal ects, string grade)> courseCopy = new Dictionary<string, (decimal, string)>(courseMap);
+
+            var upgradeables = courseCopy
+                    .Where(p => p.Value.grade.StartsWith("("))
+                    .OrderBy(p => progression.IndexOf(p.Value.grade))
+                    .ThenByDescending(p => p.Value.ects)
+                    .ToList();
+
+            foreach (var pair in upgradeables)
+            {
+                courseCopy[pair.Key] = (pair.Value.ects, " ");
+
+            }
+
+            MessageBox.Show("Clearing plans...");
+            courseMap = new Dictionary<string, (decimal ects, string grade)>(courseCopy);
+
+            List<string> course_names = new List<string>();
+            List<string> course_points = new List<string>();
+            List<string> course_grades = new List<string>();
+
+            foreach (var pair in courseMap)
+            {
+                course_names.Add(pair.Key);
+                course_points.Add($"{pair.Value.ects}");
+                course_grades.Add($"{pair.Value.grade}");
+            }
+
+            coursesLbx.DataSource = null;
+            coursesLbx.DataSource = course_names;
+            pointsLbx.DataSource = null;
+            pointsLbx.DataSource = course_points;
+            gradeLbx.DataSource = null;
+            gradeLbx.DataSource = course_grades;
+
+            updateGPA();
         }
     }
 }
