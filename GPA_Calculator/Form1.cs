@@ -586,6 +586,8 @@ namespace GPA_Calculator
             courseNameBox.Enabled = false;
             numericUpDown1.Enabled = false;
             gradeSelector.Enabled = false;
+            button1.Visible = false;
+            checkBox1.Enabled = false;
 
 
             targetGPAUpDown.Visible = true;
