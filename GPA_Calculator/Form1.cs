@@ -22,6 +22,7 @@ namespace GPA_Calculator
             maxBtn.Visible = false;
             minBtn.Visible = false;
             clearPlansBtn.Visible = false;
+            button1.Visible = false;    
 
 
             string connectionString = "Data Source=courses.db;";
@@ -184,12 +185,13 @@ namespace GPA_Calculator
         }
 
         private void coursesLbx_SelectedIndexChanged(object sender, EventArgs e)
-        {   
-            if (pointsLbx.SelectedIndex != null && gradeLbx.SelectedIndex != null) {
+        {
+            if (pointsLbx.SelectedIndex != null && gradeLbx.SelectedIndex != null)
+            {
                 pointsLbx.SelectedIndex = coursesLbx.SelectedIndex;
                 gradeLbx.SelectedIndex = coursesLbx.SelectedIndex;
             }
-            
+
         }
 
         private void pointsLbx_SelectedIndexChanged(object sender, EventArgs e)
@@ -209,7 +211,7 @@ namespace GPA_Calculator
                 pointsLbx.SelectedIndex = gradeLbx.SelectedIndex;
                 coursesLbx.SelectedIndex = gradeLbx.SelectedIndex;
             }
-            
+
         }
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
@@ -377,7 +379,7 @@ namespace GPA_Calculator
                             course_grades.Add($"{pair.Value.grade}");
                         }
 
-                        
+
 
                         coursesLbx.DataSource = null;
                         coursesLbx.DataSource = course_names;
@@ -460,9 +462,10 @@ namespace GPA_Calculator
                         List<string> course_points = new List<string>();
                         List<string> course_grades = new List<string>();
 
-                        foreach (var pair in courseMap.Where(p => p.Value.grade != " " && 
+                        foreach (var pair in courseMap.Where(p => p.Value.grade != " " &&
                                                                 !(p.Value.grade.StartsWith("(")))
-                                                       .OrderByDescending(p => decimal.Parse(p.Value.grade))){
+                                                       .OrderByDescending(p => decimal.Parse(p.Value.grade)))
+                        {
                             course_names.Add(pair.Key);
                             course_points.Add($"{pair.Value.ects}");
                             course_grades.Add($"{pair.Value.grade}");
@@ -807,6 +810,67 @@ namespace GPA_Calculator
             gradeLbx.DataSource = course_grades;
 
             updateGPA();
+        }
+
+        private void checkBox1_Click(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                addCourseBtn.Visible = false;
+                button1.Visible = true;
+            }
+            else
+            {
+                addCourseBtn.Visible = true;
+                button1.Visible = false;
+            }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            if (courseMap.Count != 0)
+            {
+                string name = courseNameBox.Text;
+                decimal ects = numericUpDown1.Value;
+                string grade = gradeSelector.Text;
+
+                courseMap.Remove(coursesLbx.SelectedItem.ToString());
+                if (!courseMap.ContainsKey(name))
+                {
+                    courseMap.Add(name, (ects, grade));
+
+                    List<string> course_names = new List<string>();
+                    List<string> course_points = new List<string>();
+                    List<string> course_grades = new List<string>();
+
+                    foreach (var pair in courseMap)
+                    {
+                        course_names.Add(pair.Key);
+                        course_points.Add($"{pair.Value.ects}");
+                        course_grades.Add(pair.Value.grade);
+
+                    }
+                    coursesLbx.DataSource = null;
+                    coursesLbx.DataSource = course_names;
+
+                    pointsLbx.DataSource = null;
+                    pointsLbx.DataSource = course_points;
+
+                    gradeLbx.DataSource = null;
+                    gradeLbx.DataSource = course_grades;
+
+                    updateGPA();
+                } else
+                {
+                    MessageBox.Show("Course already exists!");
+                }
+                
+
+            }
+            else
+            {
+                MessageBox.Show("Nothing to modify...");
+            }
         }
     }
 }

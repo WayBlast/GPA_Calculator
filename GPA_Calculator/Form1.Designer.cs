@@ -63,6 +63,8 @@
             targetLbl = new Label();
             targetGPAUpDown = new NumericUpDown();
             totalECTSLbl = new Label();
+            checkBox1 = new CheckBox();
+            button1 = new Button();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             menuStrip1.SuspendLayout();
             controlBox.SuspendLayout();
@@ -423,11 +425,39 @@
             totalECTSLbl.Text = "Total ECTS = :) ";
             totalECTSLbl.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.FlatStyle = FlatStyle.Popup;
+            checkBox1.Font = new Font("Segoe UI", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            checkBox1.Location = new Point(299, 38);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(51, 17);
+            checkBox1.TabIndex = 23;
+            checkBox1.Text = "Mod.";
+            checkBox1.UseVisualStyleBackColor = true;
+            checkBox1.Click += checkBox1_Click;
+            // 
+            // button1
+            // 
+            button1.BackColor = SystemColors.Control;
+            button1.FlatStyle = FlatStyle.System;
+            button1.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            button1.Location = new Point(298, 56);
+            button1.Name = "button1";
+            button1.Size = new Size(49, 29);
+            button1.TabIndex = 24;
+            button1.Text = "Modify";
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click_2;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(359, 484);
+            Controls.Add(button1);
+            Controls.Add(checkBox1);
             Controls.Add(totalECTSLbl);
             Controls.Add(label4);
             Controls.Add(gradeLbx);
@@ -495,5 +525,7 @@
         private Button minBtn;
         private Button maxBtn;
         private Button clearPlansBtn;
+        private CheckBox checkBox1;
+        private Button button1;
     }
 }
